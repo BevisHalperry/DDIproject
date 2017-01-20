@@ -138,8 +138,10 @@ function Instructions(){
     fill(255);
     text("enjoy the demo by @bevishalperry",textX,textY,textX2,textY2);
   }
-
   stroke(44,5,90);
   strokeWeight(4);
+}
 
+function windowResized() {
+  resizeCanvas(windowWidth, windowHeight);
 }
