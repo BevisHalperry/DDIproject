@@ -2,18 +2,18 @@ function SoundMaker(tempIndex) {
 
   this.index = tempIndex;
   this.padding = (width/20);
-  this.colour0 = color("red");
-  this.colour1 = color("blue");
-  this.colour2 = color("green");
-  this.colour3 = color("yellow");
-  this.colour0norm = color("red");
-  this.colour1norm = color("blue");
-  this.colour2norm = color("green");
-  this.colour3norm = color("yellow");
-  this.colour0alt = color("darkred");
-  this.colour1alt = color("darkblue");
-  this.colour2alt = color("darkgreen");
-  this.colour3alt = color("orange");
+  this.colour0 = color(352,100,61);
+  this.colour1 = color(17,86,92);
+  this.colour2 = color(39,78,88);
+  this.colour3 = color(350,100,23);
+  this.colour0norm = color(352,100,61);
+  this.colour1norm = color(17,86,92);
+  this.colour2norm = color(39,78,88);
+  this.colour3norm = color(350,100,23);
+  this.colour0alt = color(352,100,41);
+  this.colour1alt = color(17,86,72);
+  this.colour2alt = color(39,78,68);
+  this.colour3alt = color(350,100,03);
   this.state = false
 
   this.init = function() {
@@ -32,48 +32,54 @@ function SoundMaker(tempIndex) {
     var index = this.index;
 //    console.log(index);
     if (index == 0) {
-    this.drawSquare(1,1,this.colour0,"NE");
+    this.drawSquare(1,1,this.colour0);
     }
     if (index == 1) {
-    this.drawSquare(1,2,this.colour1,"N");
+    this.drawSquare(1,2,this.colour1);
     }
     if (index == 2) {
-    this.drawSquare(2,1,this.colour2,"E");
+    this.drawSquare(2,1,this.colour2);
     }
     if (index == 3) {
-      this.drawSquare(2,2,this.colour3,"SW");
+      this.drawSquare(2,2,this.colour3);
     }
   }
 
-  this.drawSquare = function(tempGridX,tempGridY,tempColour,tempLineDirect){
+  this.drawSquare = function(tempGridX,tempGridY,tempColour){
     var colour = tempColour;
     fill(colour);
-    var lineDirection = tempLineDirect;
     var padding = this.padding;
     var gridX = tempGridX;
     var gridY = tempGridY;
   //  console.log(gridX,gridY)
     if (gridX == 1 && gridY == 1) {
       rect(padding,padding,((width/2)-padding),((height/4)-(padding)));
-  //    console.log("drawing1");
-    }
+      strokeWeight(20);
+      line(padding,(height/4)-padding,width/2,padding);
+      strokeWeight(4);
+      }
     if (gridX == 1 && gridY == 2) {
       rect((width/2),padding,((width/2)-padding),((height/4)-(padding)));
-  //    console.log("drawing2");
+      var offsetX = (width/2);
+      for (var j=30; j<(width-padding-offsetX); j+=30) {
+         line((offsetX+j),((height/4)-(padding)),(offsetX+j),padding);
+       }
     }
     if (gridX == 2 && gridY == 1) {
-      rect(padding,((height/4)-(padding)),((width/2)-padding),((height/4)-(padding)));
-  //    console.log("drawing3");
+      rect(padding,((height/4)-(padding)),((width/2)-padding),((height/4)-(2*padding)));
+      var offsetY = (height/4-padding)+20;
+      for (var i=10; i<(height/2)-2*padding-offsetY-70; i+=30) {
+         line(padding,offsetY+i,(width/2),offsetY+i);
+       }
     }
     if (gridX == 2 && gridY == 2) {
-      rect((width/2),((height/4)-(padding)),((width/2)-padding),((height/4)-(padding)));
-  //    console.log("drawing4");
+      rect((width/2),((height/4)-(padding)),((width/2)-padding),((height/4)-(2*padding)));
+      strokeWeight(20);
+      line(width/2,(height/4)-padding,width-padding,height/2-3*padding);
+      strokeWeight(4);
     }
   }
 
-  this.drawLines = function(){
-
-  }
 
 // checking if certain soundmaker is being pressed
   this.poll = function(){
@@ -105,6 +111,7 @@ function SoundMaker(tempIndex) {
       Recorders[0].record(SoundFiles[0]);
       this.colour0 = this.colour0alt;
       this.state = true;
+      console.log("recording");
     }
     if (this.poll() == 1 && Mics[1].enabled) {
       Recorders[1].record(SoundFiles[1]);
@@ -127,7 +134,6 @@ function SoundMaker(tempIndex) {
     if (this.poll() == 0 && this.state === true) {
       Recorders[0].stop;
       this.colour0 = this.colour0norm;
-      console.log("soundmaker 0 stopping");
       this.state = false;
     }
     if (this.poll() == 1 && this.state === true) {
@@ -148,7 +154,7 @@ function SoundMaker(tempIndex) {
   }
 
   this.playing = function(){
-    SoundFiles[0].play();
+    SoundFiles[this.index].loop();
     console.log("playing");
   }
 
